@@ -1,17 +1,32 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { authActions } from "../../store/authSlice";
 
 const Signup = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const cPasswordInputRef = useRef();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const [error, setError] = useState({isError: false, errorMessage: ""});
+  const dispatch = useDispatch();
 
   const switchAuthModeHandler = ()=>{
     setIsLogin(prevState => !prevState);
   }
+
+  useEffect(()=>{
+    if(error.isError){
+        const timer = setTimeout(()=>{
+            setError({isError: false, errorMessage: ""})
+        },2000);
+        return()=>clearTimeout(timer);
+    }
+  },[error.isError]);
 
   const submitFormHandler = async (event) => {
     event.preventDefault();
@@ -20,7 +35,7 @@ const Signup = () => {
     if(!isLogin){
       const enteredCPassword = cPasswordInputRef.current.value;
       if (enteredPassword !== enteredCPassword) {
-        alert("Password and confirm password should be matched!");
+        setError({isError: true, errorMessage: "Password and confirm password should be matched!"});
         return;
       }
     }
@@ -46,12 +61,13 @@ const Signup = () => {
       setIsLoading(false);
       const data = await res.json();
       if (!res.ok) {
-        throw new Error("Something went wrong!");
+        throw new Error("Email or password should be correct!");
       }
       if(isLogin){
         console.log("User has successfully logged in!");
-        localStorage.setItem("email",data.email);
-        localStorage.setItem("token",data.idToken);
+        const idToken = data.idToken;
+        const email = data.email;
+        dispatch(authActions.login({idToken, email}));
         navigate('/home');
       }else{
         console.log("User has successfully signed up!");
@@ -59,13 +75,13 @@ const Signup = () => {
       }
       console.log(data);
     } catch (error) {
-      alert("Email or password should correct!");
+      setError({isError: true, errorMessage: error.message});
       console.log(error.message);
     }
   };
 
   return (
-    <section className="border-2 border-amber-900 bg-amber-50 rounded-lg my-12 w-3/5 m-auto shadow-md shadow-amber-900">
+    <section className="border-2 border-amber-900 bg-amber-50 rounded-lg my-24 w-3/5 m-auto shadow-[0_0_40px_-10px_rgba(0,0,0,0.6)] shadow-amber-900">
       <h1 className="text-center my-6 text-purple-900 text-3xl font-bold">
         {isLogin ? "Log In" : "Sign Up"}
       </h1>
@@ -73,28 +89,52 @@ const Signup = () => {
         onSubmit={submitFormHandler}
         className="flex flex-col w-3/4 m-auto my-5"
       >
-        <input
-          type="email"
-          placeholder="Email"
-          ref={emailInputRef}
-          className="bg-purple-300 border-2 border-purple-300 rounded-lg p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          ref={passwordInputRef}
-          className="bg-purple-300 border-2 border-purple-300 rounded-lg p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800"
-          required
-        />
-        {!isLogin && (
+        {error.isError && <p className="text-red-600 font-bold">{error.errorMessage}</p>}
+        <div className="relative">
+          <img src="assets/email.png" alt="Email" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
           <input
-            type="password"
-            placeholder="Confirm Password"
-            ref={cPasswordInputRef}
-            className="bg-purple-300 border-2 border-purple-300 rounded-lg my-2 p-1 focus:outline-none focus:border-2 focus:border-amber-800"
+            type="email"
+            placeholder="Email"
+            ref={emailInputRef}
+            className="bg-purple-300 w-full border-2 border-purple-300 rounded-lg pl-7 p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800"
             required
           />
+        </div>
+        <div className="relative">
+          <img src="assets/lock.png" alt="Password" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            ref={passwordInputRef}
+            className="bg-purple-300 w-full border-2 border-purple-300 rounded-lg pl-7 p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800"
+            required
+          />
+          <button
+            type="button"
+            onClick={()=>setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 border-none bg-none transform translate-y-[-50%] cursor-pointer"
+          >
+            {showPassword ? '👁️' : '👁️‍🗨️'}
+          </button>
+        </div>
+        {!isLogin && (
+          <div className="relative">
+            <img src="assets/lock.png" alt="Confirm Password" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
+            <input
+              type={showCPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              ref={cPasswordInputRef}
+              className="bg-purple-300 w-full border-2 border-purple-300 rounded-lg my-2 pl-7 p-1 focus:outline-none focus:border-2 focus:border-amber-800"
+              required
+          />
+          <button 
+            type="button"
+            onClick={()=>setShowCPassword(!showCPassword)}
+            className="absolute right-2 top-1/2 border-none bg-none transform translate-y-[-50%] cursor-pointer"
+          >
+            {showCPassword ? '👁️' : '👁️‍🗨️'}
+          </button>
+          </div>
         )}
         {!isLoading && <button
           type="submit"
@@ -102,7 +142,7 @@ const Signup = () => {
         >
           {isLogin ? "Login" : "Signup"}
         </button>}
-        {isLoading && <p className="text-center">Sending request...</p>}
+        {isLoading && <p className="text-center text-amber-900">Sending request...</p>}
         {isLogin && <Link to="/forgot" className="text-center text-red-600">Forgot Password</Link>}
         <span onClick={switchAuthModeHandler} className="my-2 text-center cursor-pointer text-red-600 font-bold">
           {isLogin ? "Don't have an account? Signup" : "Have an account? Login"}

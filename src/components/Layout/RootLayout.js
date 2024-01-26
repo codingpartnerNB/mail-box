@@ -2,14 +2,15 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 
+
 const RootLayout = ()=>{
     return(
-        <React.Fragment>
+        <div className="flex">
             <Header />
-            <main>
+            <main className="w-full">
                 <Outlet />
             </main>
-        </React.Fragment>
+        </div>
     );
 }
 
