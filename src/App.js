@@ -5,6 +5,7 @@ import Signup from './components/Signup/Signup';
 import Home from './components/Layout/Home';
 import ForgotPassword from './components/Layout/ForgotPassword';
 import { useSelector } from 'react-redux';
+import ComposeMail from './components/Mails/ComposeMail';
 
 function App() {
   const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn);
@@ -16,6 +17,7 @@ function App() {
           <Route index element={<Signup />} />
           <Route path="home" element={isLoggedIn ? <Home /> : <Navigate to='/' />} />
           <Route path="forgot" element={<ForgotPassword />} />
+          <Route path="compose" element={isLoggedIn ? <ComposeMail /> : <Navigate to='/' />} />
         </Route>
       </Routes>
     </BrowserRouter>
