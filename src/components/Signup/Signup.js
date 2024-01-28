@@ -73,7 +73,7 @@ const Signup = () => {
         console.log("User has successfully signed up!");
         setIsLogin(true);
       }
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       setError({isError: true, errorMessage: error.message});
       console.log(error.message);
