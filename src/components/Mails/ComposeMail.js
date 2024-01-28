@@ -29,8 +29,8 @@ const ComposeMail = () => {
 
   const formattedDate = `${date}-${month}-${year}`;
   const formattedTime = `${hours}:${minutes}`;
-  console.log(formattedDate);
-  console.log(formattedTime);
+  // console.log(formattedDate);
+  // console.log(formattedTime);
 
   
   const submitMailHandler = async(event) => {
@@ -57,7 +57,7 @@ const ComposeMail = () => {
       atTime: formattedTime,
     };
     console.log(mail);
-    isLoading(true);
+    setIsLoading(true);
     dispatch(addMailHandler(mail, email.replace(/[@.]/g, ''), enteredEmail.replace(/[@.]/g, "")));
     setBody("");
     setEnteredEmail("");

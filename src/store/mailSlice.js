@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   sentMailMsg: [],
   receivedMailMsg: [],
-  sentInboxMail: [],
+  inboxMailMsg: [],
   unreadMails: 0,
   totalMails: 0,
 };
@@ -16,7 +16,20 @@ const mailSlice = createSlice({
       state.sentMailMsg.push(action.payload);
     },
     addReceivedMails(state, action) {
-
+      state.receivedMailMsg = action.payload;
+    },
+    addInboxMails(state, action) {
+      state.inboxMailMsg = action.payload;
+    },
+    updateTotalMsg(state, action) {
+      state.totalMails = action.payload;
+    },
+    clearAllMails(state) {
+      state.sentMailMsg = [];
+      state.receivedMailMsg = [];
+      state.inboxMailMsg = [];
+      state.unreadMails = 0;
+      state.totalMails = 0;
     }
   },
 });
