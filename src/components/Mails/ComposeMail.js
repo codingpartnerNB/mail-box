@@ -56,7 +56,7 @@ const ComposeMail = () => {
       atDate: formattedDate,
       atTime: formattedTime,
     };
-    console.log(mail);
+    // console.log(mail);
     setIsLoading(true);
     dispatch(addMailHandler(mail, email.replace(/[@.]/g, ''), enteredEmail.replace(/[@.]/g, "")));
     setBody("");

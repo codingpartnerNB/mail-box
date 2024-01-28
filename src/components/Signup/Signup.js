@@ -142,7 +142,7 @@ const Signup = () => {
         >
           {isLogin ? "Login" : "Signup"}
         </button>}
-        {isLoading && <p className="text-center text-amber-900">Sending request...</p>}
+        {isLoading && <p className="text-center my-4 text-amber-900">Sending request...</p>}
         {isLogin && <Link to="/forgot" className="text-center text-red-600">Forgot Password</Link>}
         <span onClick={switchAuthModeHandler} className="my-2 text-center cursor-pointer text-red-600 font-bold">
           {isLogin ? "Don't have an account? Signup" : "Have an account? Login"}

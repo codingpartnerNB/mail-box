@@ -63,13 +63,6 @@ export const addMailHandler = (mail, senderEmail, email)=>{
 
 export const fetchMailData = ()=>{
     return async(dispatch, getState)=>{
-        dispatch(
-            uiActions.showNotification({
-              status: "Pending",
-              title: "Fetching...",
-              message: "Fetching mail!",
-            })
-        );
         const email = getState().auth.email;
         const fetchMails = async()=>{
             const inboxRes = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/inbox.json`);
@@ -104,6 +97,43 @@ export const fetchMailData = ()=>{
                     status: "Error",
                     title: "Error!",
                     message: "Fetching mail failed!",
+                })
+            );
+            console.log(error);
+        }
+    }
+}
+
+export const readMessage = (id, isRead)=>{
+    return async(dispatch,getState)=>{
+        const email = getState().auth.email;
+        const reading = async()=>{
+            const res = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/inbox/${id}.json`,{
+                method: 'PATCH',
+                body: JSON.stringify({isRead: true}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if(!res.ok){
+                throw new Error("Failed to update inbox isRead!");
+            }
+            const data = await res.json();
+            // console.log(data);
+            return data;
+        }
+        try{
+            const data = await reading();
+            dispatch(mailActions.markMessageAsRead({msgId: id, isRead: data.isRead}));
+            if(isRead){
+                dispatch(mailActions.updateUnreadMsg(-1));
+            }
+        }catch(error){
+            dispatch(
+                uiActions.showNotification({
+                    status: "Error",
+                    title: "Error!",
+                    message: "Reading mail failed!",
                 })
             );
             console.log(error);

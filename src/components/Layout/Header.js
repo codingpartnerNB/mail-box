@@ -7,14 +7,16 @@ const Header = () => {
   const [isVisible, setIsVisible] = useState(false);
   const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn);
   const dispatch = useDispatch();
+  const unreadMsg = useSelector(state=>state.mail.unreadMails);
+  const totalMsg = useSelector(state=>state.mail.totalMails);
 
   const sidebarItems = [
-    { src: "login", label: "Login", show: !isLoggedIn, to: "/" },
-    { src: "compose", label: "Compose", show: isLoggedIn, to: "/compose" },
-    { src: "home", label: "Home", show: isLoggedIn, to: "/home" },
-    { src: "inbox", label: "Inbox", show: isLoggedIn, to: "/inbox" },
-    { src: "sent", label: "Sent", show: isLoggedIn, to: "/sent" },
-    { src: "logout", label: "Logout", show: isLoggedIn, to: "" },
+    { src: "login", label: "Login", show: !isLoggedIn, to: "/", msgCount: '' },
+    { src: "compose", label: "Compose", show: isLoggedIn, to: "/compose", msgCount: '' },
+    { src: "home", label: "Home", show: isLoggedIn, to: "/home", msgCount: '' },
+    { src: "inbox", label: "Inbox", show: isLoggedIn, to: "/inbox", msgCount: unreadMsg },
+    { src: "sent", label: "Sent", show: isLoggedIn, to: "/sent", msgCount: totalMsg },
+    { src: "logout", label: "Logout", show: isLoggedIn, to: "", msgCount: '' },
   ];
 
   return (
@@ -56,14 +58,14 @@ const Header = () => {
                   !isVisible && "opacity-0 translate-x-20 overflow-hidden"
                 } whitespace-pre origin-left duration-300`}
               >
-                {list.label}
+                {`${list.label} ${list.msgCount}`}
               </span>
               <span
                 className={`${
                   isVisible && "hidden"
                 } absolute left-28 bg-white whitespace-pre rounded-md drop-shadow-lg w-0 overflow-hidden px-0 py-0 group-hover:px-2 group-hover:py-1 group-hover:left-20 group-hover:duration-300 group-hover:w-fit`}
               >
-                {list.label}
+                {`${list.label} ${list.msgCount}`}
               </span>
             </NavLink>
           )

@@ -24,6 +24,15 @@ const mailSlice = createSlice({
     updateTotalMsg(state, action) {
       state.totalMails = action.payload;
     },
+    markMessageAsRead(state, action) {
+      const {msgId, isRead} = action.payload;
+      state.receivedMailMsg = state.receivedMailMsg.map(msg=>
+        msg.id === msgId ? {...msg, isRead: isRead} : msg
+      );
+    },
+    updateUnreadMsg(state, action) {
+      state.unreadMails = action.payload;
+    },
     clearAllMails(state) {
       state.sentMailMsg = [];
       state.receivedMailMsg = [];
