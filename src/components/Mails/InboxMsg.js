@@ -10,7 +10,11 @@ const InboxMsg = ()=>{
 
     const msg = receivedMails.find(mail=>mail.id === msgId);
     if(!msg){
-        return <p className="text-center text-amber-900 m-16">Mail not found!</p>
+        return(
+            <section key={msg.id} className="border-2 border-amber-900 bg-amber-100 rounded-lg my-14 w-3/4 m-auto shadow-[0_0_40px_-10px_rgba(0,0,0,0.6)] shadow-amber-900">
+                <p className="text-center text-amber-900 m-auto my-10">Mail not found!</p>
+            </section>
+        );
     }
 
     const openInNewTab = ()=>{

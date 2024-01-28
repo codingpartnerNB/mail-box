@@ -18,4 +18,28 @@ describe("Inbox component", ()=>{
         const noMailDiv = screen.getByText("no mail is found", {exact: false});
         expect(noMailDiv).toBeInTheDocument();
     });
+    test("Reders image if message is unread", ()=>{
+        render(
+            <Router>
+                <Provider store={store} >
+                    <Inbox />
+                </Provider>
+            </Router>
+        );
+
+        const imgElem = screen.getByRole('img');
+        expect(imgElem).toBeInTheDocument();
+    });
+    test("Does not renders image if message is read", ()=>{
+        render(
+            <Router>
+                <Provider store={store} >
+                    <Inbox />
+                </Provider>
+            </Router>
+        );
+
+        const imgElem = screen.getByRole('img');
+        expect(imgElem).not.toBeInTheDocument();
+    });
 });
