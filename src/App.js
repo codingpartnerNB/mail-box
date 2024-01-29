@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import ComposeMail from './components/Mails/ComposeMail';
 import Inbox from './components/Mails/Inbox';
 import InboxMsg from './components/Mails/InboxMsg';
+import Sent from './components/Mails/Sent';
+import SentMsg from './components/Mails/SentMsg';
 
 function App() {
   const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn);
@@ -22,6 +24,8 @@ function App() {
           <Route path="compose" element={isLoggedIn ? <ComposeMail /> : <Navigate to='/' />} />
           <Route path="inbox" element={isLoggedIn ? <Inbox /> : <Navigate to='/' />} />
           <Route path="inbox/:msgId" element={isLoggedIn ? <InboxMsg /> : <Navigate to='/' />} />
+          <Route path="sent" element={isLoggedIn ? <Sent /> : <Navigate to='/' />} />
+          <Route path="sent/:msgId" element={isLoggedIn ? <SentMsg /> : <Navigate to='/' />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteMailMessage, fetchMailData, readMessage } from "../../store/mailAllActions";
+import { deleteInboxMailMessage, fetchMailData, readMessage } from "../../store/mailAllActions";
 import { mailActions } from "../../store/mailSlice";
 import { useNavigate } from "react-router-dom";
 import deleteImg from '../../assets/delete.png';
@@ -14,6 +14,7 @@ const Inbox = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const MAX_CHARACTERS = 30;
+  const SUBJECT_MAX_CHAR = 10;
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -30,6 +31,13 @@ const Inbox = () => {
     return text;
   };
 
+  const subTextLimit = (text)=>{
+    if(text && text.length > SUBJECT_MAX_CHAR){
+        return `${text.substring(0, SUBJECT_MAX_CHAR)}...`;
+    }
+    return text;
+}
+
   const readMessageHandler = (id, isRead) => {
     dispatch(readMessage(id, isRead));
     navigate(`/inbox/${id}`);
@@ -42,7 +50,7 @@ const Inbox = () => {
     //     await deleteObject(imageRef);
     //     alert("Image has been successfully deleted from firebase storage!");
     // }
-    dispatch(deleteMailMessage(mail.id));
+    dispatch(deleteInboxMailMessage(mail.id));
   };
 
   return (
@@ -67,7 +75,7 @@ const Inbox = () => {
               {mail.from}
             </div>
             <div className="flex gap-2 mx-10">
-              {mail.subject}
+              {subTextLimit(mail.subject)}
               <span className="text-slate-600">{limitText(mail.body)}</span>
             </div>
             <div className="absolute right-0">

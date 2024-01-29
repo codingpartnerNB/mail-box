@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  sentMailMsg: [],
+  currentMailMsg: [],
   receivedMailMsg: [],
-  inboxMailMsg: [],
+  sentMailMsg: [],
   unreadMails: 0,
   totalMails: 0,
 };
@@ -12,14 +12,14 @@ const mailSlice = createSlice({
   name: "mail",
   initialState,
   reducers: {
-    addSentMails(state, action) {
-      state.sentMailMsg.push(action.payload);
+    addCurrentMail(state, action) {
+      state.currentMailMsg.push(action.payload);
     },
     addReceivedMails(state, action) {
       state.receivedMailMsg = action.payload;
     },
-    addInboxMails(state, action) {
-      state.inboxMailMsg = action.payload;
+    addSentMails(state, action) {
+      state.sentMailMsg = action.payload;
     },
     updateTotalMsg(state, action) {
       state.totalMails = action.payload;
@@ -33,7 +33,7 @@ const mailSlice = createSlice({
     updateUnreadMsg(state, action) {
       state.unreadMails = action.payload;
     },
-    deleteMail(state, action) {
+    deleteReceivedMail(state, action) {
       const mailToDelete = state.receivedMailMsg.find(
         (mail) => mail.id === action.payload
       );
@@ -43,10 +43,20 @@ const mailSlice = createSlice({
         );
       }
     },
+    deleteSentMail(state, action) {
+      const mailToDelete = state.sentMailMsg.find(
+        (mail) => mail.id === action.payload
+      );
+      if (mailToDelete) {
+        state.sentMailMsg = state.sentMailMsg.filter(
+          (delMail) => delMail.id !== action.payload
+        );
+      }
+    },
     clearAllMails(state) {
-      state.sentMailMsg = [];
+      state.currentMailMsg = [];
       state.receivedMailMsg = [];
-      state.inboxMailMsg = [];
+      state.sentMailMsg = [];
       state.unreadMails = 0;
       state.totalMails = 0;
     },
