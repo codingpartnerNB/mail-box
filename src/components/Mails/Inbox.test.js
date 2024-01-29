@@ -42,4 +42,16 @@ describe("Inbox component", ()=>{
         const imgElem = screen.getByRole('img');
         expect(imgElem).not.toHaveAttribute('src','assets/unread.png');
     });
+    test("Have alt property with value Remove mail.", ()=>{
+        render(
+            <Router>
+                <Provider store={store} >
+                    <Inbox />
+                </Provider>
+            </Router>
+        );
+
+        const imgElem = screen.getByRole('img');
+        expect(imgElem).toHaveAttribute('alt','Remove mail');
+    });
 });
