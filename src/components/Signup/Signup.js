@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { authActions } from "../../store/authSlice";
+import emailImg from '../../assets/email.png';
+import lock from '../../assets/lock.png';
 
 const Signup = () => {
   const emailInputRef = useRef();
@@ -91,7 +93,7 @@ const Signup = () => {
       >
         {error.isError && <p className="text-red-600 font-bold">{error.errorMessage}</p>}
         <div className="relative">
-          <img src="assets/email.png" alt="Email" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
+          <img src={emailImg} alt="Email" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
           <input
             type="email"
             placeholder="Email"
@@ -101,7 +103,7 @@ const Signup = () => {
           />
         </div>
         <div className="relative">
-          <img src="assets/lock.png" alt="Password" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
+          <img src={lock} alt="Password" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
@@ -119,7 +121,7 @@ const Signup = () => {
         </div>
         {!isLogin && (
           <div className="relative">
-            <img src="assets/lock.png" alt="Confirm Password" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
+            <img src={lock} alt="Confirm Password" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
             <input
               type={showCPassword ? "text" : "password"}
               placeholder="Confirm Password"

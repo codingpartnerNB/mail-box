@@ -4,6 +4,8 @@ import { addMailHandler } from "../../store/mailAllActions";
 import storageDb from "../../store/Config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import attachFile from '../../assets/attach-file.png';
+import remove from '../../assets/remove.png';
 
 const ComposeMail = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
@@ -69,8 +71,8 @@ const ComposeMail = () => {
   const handleAttachmentChange = (event) => {
     const file = event.target.files[0];
     setAttachment(file);
-
-    if (file) {
+    // console.log(file);
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
       const reader = new FileReader();
       reader.onload = (e) => {
         // Set the result of FileReader as the src for preview
@@ -91,6 +93,7 @@ const ComposeMail = () => {
   const handleRemoveAttachment = () => {
     setAttachment(null);
     setPreviewSrc(null);
+    setIsImage(false);
   };
 
   return (
@@ -122,7 +125,7 @@ const ComposeMail = () => {
         {!attachment && (
             <div className="float-right">
                 <label htmlFor="attachment" className="block my-2">
-                    <img src="assets/attach-file.png" alt="Attach something here." className="w-4 cursor-pointer" />
+                    <img src={attachFile} alt="Attach something here." className="w-4 cursor-pointer" />
                 </label>
                 <input
                     type="file"
@@ -138,7 +141,7 @@ const ComposeMail = () => {
             {isImage && <img src={previewSrc} className="w-36 rounded-md" alt="Preview Attachment" />}
             {!isImage && <span className="p-6">{attachment.name}</span>}
             <img
-              src="assets/remove.png"
+              src={remove}
               alt="Remove Attachment"
               onClick={handleRemoveAttachment}
               className="w-3 absolute cursor-pointer top-0 right-0"

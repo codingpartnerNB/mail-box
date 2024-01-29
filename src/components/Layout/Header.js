@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { authActions } from "../../store/authSlice";
+import login from '../../assets/login.png';
+import compose from '../../assets/compose.png';
+import home from '../../assets/home.png';
+import inbox from '../../assets/inbox.png';
+import sent from '../../assets/sent.png';
+import logout from '../../assets/logout.png';
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -11,12 +17,12 @@ const Header = () => {
   const totalMsg = useSelector(state=>state.mail.totalMails);
 
   const sidebarItems = [
-    { src: "login", label: "Login", show: !isLoggedIn, to: "/", msgCount: '' },
-    { src: "compose", label: "Compose", show: isLoggedIn, to: "/compose", msgCount: '' },
-    { src: "home", label: "Home", show: isLoggedIn, to: "/home", msgCount: '' },
-    { src: "inbox", label: "Inbox", show: isLoggedIn, to: "/inbox", msgCount: unreadMsg },
-    { src: "sent", label: "Sent", show: isLoggedIn, to: "/sent", msgCount: totalMsg },
-    { src: "logout", label: "Logout", show: isLoggedIn, to: "", msgCount: '' },
+    { src: login, label: "Login", show: !isLoggedIn, to: "/", msgCount: '' },
+    { src: compose, label: "Compose", show: isLoggedIn, to: "/compose", msgCount: '' },
+    { src: home, label: "Home", show: isLoggedIn, to: "/home", msgCount: '' },
+    { src: inbox, label: "Inbox", show: isLoggedIn, to: "/inbox", msgCount: `${unreadMsg} (Unread)` },
+    { src: sent, label: "Sent", show: isLoggedIn, to: "/sent", msgCount: `${totalMsg} (Total)` },
+    { src: logout, label: "Logout", show: isLoggedIn, to: "", msgCount: '' },
   ];
 
   return (
@@ -36,7 +42,7 @@ const Header = () => {
       </h1>
       <div
         className={`bg-purple-300 relative m-2 rounded-xl h-auto ${
-          isVisible ? "w-56" : "w-20"
+          isVisible ? "w-64" : "w-20"
         } transition-[width] duration-300 ease-in-out`}
       >
         {sidebarItems.map((list, index) => (
@@ -48,7 +54,7 @@ const Header = () => {
               onClick={()=>{list.label === "Logout" && dispatch(authActions.logout())}}
             >
               <img
-                src={`assets/${list.src}.png`}
+                src={list.src}
                 alt={list.label}
                 className="w-12 pl-1"
               />

@@ -53,7 +53,7 @@ export const addMailHandler = (mail, senderEmail, email)=>{
                 uiActions.showNotification({
                     status: "Error",
                     title: "Error!",
-                    message: "Sending mail failed!",
+                    message: "Failed to send mail!",
                 })
             );
             console.log(error);
@@ -69,7 +69,7 @@ export const fetchMailData = ()=>{
             if(!inboxRes){
                 throw new Error("Failed to fetch inbox mails!");
             }
-            
+
             const inboxData = await inboxRes.json();
             return inboxData;
         }
@@ -82,7 +82,8 @@ export const fetchMailData = ()=>{
                 ));
                 
                 dispatch(mailActions.addReceivedMails(inboxMails));
-            
+                const unreadInboxMails = inboxMails.filter(mail=>!mail.isRead);
+                dispatch(mailActions.updateUnreadMsg(unreadInboxMails.length));
             }
             dispatch(
                 uiActions.showNotification({
@@ -96,7 +97,7 @@ export const fetchMailData = ()=>{
                 uiActions.showNotification({
                     status: "Error",
                     title: "Error!",
-                    message: "Fetching mail failed!",
+                    message: "Failed to fetch mail!",
                 })
             );
             console.log(error);
@@ -133,7 +134,41 @@ export const readMessage = (id, isRead)=>{
                 uiActions.showNotification({
                     status: "Error",
                     title: "Error!",
-                    message: "Reading mail failed!",
+                    message: "Failed to read mail!",
+                })
+            );
+            console.log(error);
+        }
+    }
+}
+
+export const deleteMailMessage = (id)=>{
+    return async(dispatch, getState)=>{
+        const email = getState().auth.email;
+        const deleting = async()=>{
+            const res = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/inbox/${id}.json`,{
+                method: 'DELETE',
+            });
+            if(!res.ok){
+                throw new Error("Failed to delete mail!");
+            }
+        }
+        try{
+            deleting();
+            dispatch(mailActions.deleteMail(id));
+            dispatch(
+                uiActions.showNotification({
+                  status: "Success",
+                  title: "Success!",
+                  message: "Mail has been deleted successfully!",
+                })
+            );
+        }catch(error){
+            dispatch(
+                uiActions.showNotification({
+                    status: "Error",
+                    title: "Error!",
+                    message: "Failed to delete mail!",
                 })
             );
             console.log(error);

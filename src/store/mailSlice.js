@@ -25,13 +25,23 @@ const mailSlice = createSlice({
       state.totalMails = action.payload;
     },
     markMessageAsRead(state, action) {
-      const {msgId, isRead} = action.payload;
-      state.receivedMailMsg = state.receivedMailMsg.map(msg=>
-        msg.id === msgId ? {...msg, isRead: isRead} : msg
+      const { msgId, isRead } = action.payload;
+      state.receivedMailMsg = state.receivedMailMsg.map((msg) =>
+        msg.id === msgId ? { ...msg, isRead: isRead } : msg
       );
     },
     updateUnreadMsg(state, action) {
       state.unreadMails = action.payload;
+    },
+    deleteMail(state, action) {
+      const mailToDelete = state.receivedMailMsg.find(
+        (mail) => mail.id === action.payload
+      );
+      if (mailToDelete) {
+        state.receivedMailMsg = state.receivedMailMsg.filter(
+          (delMail) => delMail.id !== action.payload
+        );
+      }
     },
     clearAllMails(state) {
       state.sentMailMsg = [];
@@ -39,7 +49,7 @@ const mailSlice = createSlice({
       state.inboxMailMsg = [];
       state.unreadMails = 0;
       state.totalMails = 0;
-    }
+    },
   },
 });
 

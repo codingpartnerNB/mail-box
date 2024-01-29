@@ -18,7 +18,7 @@ describe("Inbox component", ()=>{
         const noMailDiv = screen.getByText("no mail is found", {exact: false});
         expect(noMailDiv).toBeInTheDocument();
     });
-    test("Reders image if message is unread", ()=>{
+    test("Reders image has src='assets/unread.png' if message is unread", ()=>{
         render(
             <Router>
                 <Provider store={store} >
@@ -28,9 +28,9 @@ describe("Inbox component", ()=>{
         );
 
         const imgElem = screen.getByRole('img');
-        expect(imgElem).toBeInTheDocument();
+        expect(imgElem).toHaveAttribute('src','assets/unread.png');
     });
-    test("Does not renders image if message is read", ()=>{
+    test("Does not renders image has attribute src='assets/unread.png' if message is read", ()=>{
         render(
             <Router>
                 <Provider store={store} >
@@ -40,6 +40,6 @@ describe("Inbox component", ()=>{
         );
 
         const imgElem = screen.getByRole('img');
-        expect(imgElem).not.toBeInTheDocument();
+        expect(imgElem).not.toHaveAttribute('src','assets/unread.png');
     });
 });

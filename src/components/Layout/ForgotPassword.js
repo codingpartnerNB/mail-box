@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import emailImg from '../../assets/email.png';
 
 const ForgotPassword = ()=>{
     const emailInputRef = useRef();
@@ -48,7 +49,7 @@ const ForgotPassword = ()=>{
             <form onSubmit={submitHandler} className="flex flex-col w-3/4 m-auto my-5">
                 {error.isError && <p className="text-red-600 font-bold">{error.errorMessage}</p>}
                 <div className="relative">
-                    <img src="assets/email.png" alt="Email" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
+                    <img src={emailImg} alt="Email" className="w-4 absolute left-2 transform translate-y-5 cursor-text" />
                     <input type="email" id="email" ref={emailInputRef} placeholder="Email" className="bg-purple-300 w-full border-2 border-purple-300 rounded-lg pl-7 p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800" required />
                 </div>
                 {!isLoading && <button type="submit" className="bg-amber-700 text-white p-1.5 my-3 rounded-lg text-bold hover:bg-amber-900">Update Password</button>}
