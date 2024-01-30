@@ -49,9 +49,9 @@ const SentMsg = () => {
     }
   };
 
-  const deleteMailHandler = async (id) => {
+  const deleteMailHandler = (id) => {
     dispatch(deleteSentMailMessage(id));
-    navigate('/inbox');
+    navigate('/sent');
   };
 
   return (

@@ -49,7 +49,7 @@ const InboxMsg = () => {
     }
   };
 
-  const deleteMailHandler = async (id) => {
+  const deleteMailHandler = (id) => {
     dispatch(deleteInboxMailMessage(id));
     navigate('/inbox');
   };

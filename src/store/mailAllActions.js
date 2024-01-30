@@ -81,6 +81,14 @@ export const fetchMailData = ()=>{
         }
         try{
             const { inboxData, sentData } = await fetchMails();
+  
+            if(!inboxData){
+                dispatch(mailActions.clearAllMails());
+            }
+
+            if(!sentData){
+                dispatch(mailActions.clearAllMails());
+            }
 
             if(inboxData){
                 const inboxMails = Object.keys(inboxData).map(key=>(
@@ -91,10 +99,6 @@ export const fetchMailData = ()=>{
                 const unreadInboxMails = inboxMails.filter(mail=>!mail.isRead);
                 dispatch(mailActions.updateUnreadMsg(unreadInboxMails.length));
             }
-
-            // if(!sentData){
-            //     dispatch(mailActions.clearAllMails());
-            // }
 
             if(sentData){
                 const sentMails = Object.keys(sentData).map((key)=> (
