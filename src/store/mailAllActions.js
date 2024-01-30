@@ -103,14 +103,6 @@ export const fetchMailData = ()=>{
                 dispatch(mailActions.addSentMails(sentMails));
                 dispatch(mailActions.updateTotalMsg(sentMails.length));
             }
-
-            dispatch(
-                uiActions.showNotification({
-                  status: "Success",
-                  title: "Success!",
-                  message: "All mails are here!",
-                })
-            );
         } catch(error){
             dispatch(
                 uiActions.showNotification({

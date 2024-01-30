@@ -17,8 +17,13 @@ const Inbox = () => {
   const SUBJECT_MAX_CHAR = 10;
 
   useEffect(() => {
-    if (isLoggedIn) {
+    const fetchMail = ()=>{
       dispatch(fetchMailData());
+    }
+    if (isLoggedIn) {
+      fetchMail();
+      const interval = setInterval(fetchMail, 2000);
+      return ()=>clearInterval(interval);
     } else {
       dispatch(mailActions.clearAllMails());
     }
