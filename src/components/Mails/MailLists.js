@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteInboxMailMessage, fetchMailData, readMessage } from "../../store/mailAllActions";
+import { deleteMailMessage, fetchMailData, readMessage } from "../../store/mailAllActions";
 import { mailActions } from "../../store/mailSlice";
 import { useNavigate } from "react-router-dom";
 import deleteImg from '../../assets/delete.png';
@@ -8,13 +8,15 @@ import unreadImg from '../../assets/unread.png';
 // import storageDb from "../../store/Config";
 // import { ref, deleteObject } from "firebase/storage";
 
-const Inbox = () => {
-  const receivedMails = useSelector((state) => state.mail.receivedMailMsg);
+const MailLists = (props) => {
+  const mails = props.mails;
+  const mailer = props.mailer;
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const MAX_CHARACTERS = 30;
   const SUBJECT_MAX_CHAR = 10;
+  console.log("MailLists");
 
   useEffect(() => {
     const fetchMail = ()=>{
@@ -22,7 +24,7 @@ const Inbox = () => {
     }
     if (isLoggedIn) {
       fetchMail();
-      const interval = setInterval(fetchMail, 2000);
+      const interval = setInterval(fetchMail, 5000);
       return ()=>clearInterval(interval);
     } else {
       dispatch(mailActions.clearAllMails());
@@ -48,6 +50,10 @@ const Inbox = () => {
     navigate(`/inbox/${id}`);
   };
 
+  const redirectToMsg = (id)=>{
+    navigate(`/sent/${id}`);
+  }
+
   const deleteMailHandler = async(mail) => {
     // if(mail.attachment){
     //     const imgUrl = mail.attachment.downloadURL;
@@ -55,29 +61,32 @@ const Inbox = () => {
     //     await deleteObject(imageRef);
     //     alert("Image has been successfully deleted from firebase storage!");
     // }
-    dispatch(deleteInboxMailMessage(mail.id));
+    dispatch(deleteMailMessage(mail.id, mailer));
   };
 
   return (
     <section className="border-2 border-amber-900 bg-amber-50 rounded-lg my-6 w-3/4 h-full m-auto shadow-[0_0_40px_-10px_rgba(0,0,0,0.6)] shadow-amber-900">
-      {receivedMails && receivedMails.length > 0 ? (
-        receivedMails.map((mail) => (
+      {mails && mails.length > 0 ? (
+        mails.map((mail) => (
           <div
             key={mail.id}
             onClick={() => {
-              readMessageHandler(mail.id);
+                if(mailer === 'receiver')
+                    readMessageHandler(mail.id);
+                else
+                    redirectToMsg(mail.id);  
             }}
             className="border-b-2 cursor-pointer flex relative border-slate-500 w-full h-12 p-2 rounded-lg bg-slate-300"
           >
             <div className="flex gap-2 mx-10">
-              {!mail.isRead && (
+              {(mailer === 'receiver') && !mail.isRead && (
                 <img
                   src={unreadImg}
                   alt="Unread mail."
                   className="w-3 h-3 m-auto mr-2"
                 />
               )}
-              {mail.from}
+              {(mailer === 'receiver') ? mail.from : `To: ${mail.to}`}
             </div>
             <div className="flex gap-2 mx-10">
               {subTextLimit(mail.subject)}
@@ -107,4 +116,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default MailLists;

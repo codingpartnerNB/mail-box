@@ -14,6 +14,7 @@ const ComposeMail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const email = useSelector(state => state.auth.email);
+  console.log("ComposeMail");
 
   //Attachment variables
   const [attachment, setAttachment] = useState(null);

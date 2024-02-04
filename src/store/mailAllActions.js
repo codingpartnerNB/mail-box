@@ -157,70 +157,114 @@ export const readMessage = (id, isRead)=>{
     }
 }
 
-export const deleteInboxMailMessage = (id)=>{
-    return async(dispatch, getState)=>{
-        const email = getState().auth.email;
-        const deleting = async()=>{
-            const res = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/inbox/${id}.json`,{
-                method: 'DELETE',
-            });
-            if(!res.ok){
-                throw new Error("Failed to delete mail in inbox!");
+export const deleteMailMessage = (id, mailer)=>{
+        return async(dispatch, getState)=>{
+            const email = getState().auth.email;
+            const deleting = async()=>{
+                let url;
+                if(mailer === 'receiver'){
+                    url = `https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/inbox/${id}.json`;
+                }else{
+                    url = `https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/sent/${id}.json`;
+                }
+                const res = await fetch(url, {
+                    method: 'DELETE',
+                });
+                if(!res.ok){
+                    throw new Error("Failed to delete mail!");
+                }
+            }
+            try{
+                await deleting();
+                if(mailer === 'receiver'){
+                    dispatch(mailActions.deleteReceivedMail(id));
+                }else{
+                    dispatch(mailActions.deleteSentMail(id));
+                }
+                dispatch(
+                    uiActions.showNotification({
+                      status: "Success",
+                      title: "Success!",
+                      message: "Mail has been deleted successfully!",
+                    })
+                );
+            }catch(error){
+                dispatch(
+                    uiActions.showNotification({
+                        status: "Error",
+                        title: "Error!",
+                        message: "Failed to delete mail!",
+                    })
+                );
+                console.log(error);
             }
         }
-        try{
-            await deleting();
-            dispatch(mailActions.deleteReceivedMail(id));
-            dispatch(
-                uiActions.showNotification({
-                  status: "Success",
-                  title: "Success!",
-                  message: "Mail has been deleted successfully!",
-                })
-            );
-        }catch(error){
-            dispatch(
-                uiActions.showNotification({
-                    status: "Error",
-                    title: "Error!",
-                    message: "Failed to delete mail in inbox!",
-                })
-            );
-            console.log(error);
-        }
     }
-}
 
-export const deleteSentMailMessage = (id)=>{
-    return async(dispatch, getState)=>{
-        const email = getState().auth.email;
-        const deleting = async()=>{
-            const res = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/sent/${id}.json`,{
-                method: 'DELETE',
-            });
-            if(!res.ok){
-                throw new Error("Failed to delete mail in sentbox!");
-            }
-        }
-        try{
-            await deleting();
-            dispatch(mailActions.deleteSentMail(id));
-            dispatch(
-                uiActions.showNotification({
-                  status: "Success",
-                  title: "Success!",
-                  message: "Mail has been deleted successfully!",
-                })
-            );
-        }catch(error){
-            dispatch(
-                uiActions.showNotification({
-                    status: "Error",
-                    title: "Error!",
-                    message: "Failed to delete mail in sentbox!",
-                })
-            );
-            console.log(error);
-        }
-    }
-}
+// export const deleteInboxMailMessage = (id)=>{
+//     return async(dispatch, getState)=>{
+//         const email = getState().auth.email;
+//         const deleting = async()=>{
+//             const res = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/inbox/${id}.json`,{
+//                 method: 'DELETE',
+//             });
+//             if(!res.ok){
+//                 throw new Error("Failed to delete mail in inbox!");
+//             }
+//         }
+//         try{
+//             await deleting();
+//             dispatch(mailActions.deleteReceivedMail(id));
+//             dispatch(
+//                 uiActions.showNotification({
+//                   status: "Success",
+//                   title: "Success!",
+//                   message: "Mail has been deleted successfully!",
+//                 })
+//             );
+//         }catch(error){
+//             dispatch(
+//                 uiActions.showNotification({
+//                     status: "Error",
+//                     title: "Error!",
+//                     message: "Failed to delete mail in inbox!",
+//                 })
+//             );
+//             console.log(error);
+//         }
+//     }
+// }
+
+// export const deleteSentMailMessage = (id)=>{
+//     return async(dispatch, getState)=>{
+//         const email = getState().auth.email;
+//         const deleting = async()=>{
+//             const res = await fetch(`https://mail-box-288ad-default-rtdb.firebaseio.com/composeMail/${email.replace(/[@.]/g, '')}/sent/${id}.json`,{
+//                 method: 'DELETE',
+//             });
+//             if(!res.ok){
+//                 throw new Error("Failed to delete mail in sentbox!");
+//             }
+//         }
+//         try{
+//             await deleting();
+//             dispatch(mailActions.deleteSentMail(id));
+//             dispatch(
+//                 uiActions.showNotification({
+//                   status: "Success",
+//                   title: "Success!",
+//                   message: "Mail has been deleted successfully!",
+//                 })
+//             );
+//         }catch(error){
+//             dispatch(
+//                 uiActions.showNotification({
+//                     status: "Error",
+//                     title: "Error!",
+//                     message: "Failed to delete mail in sentbox!",
+//                 })
+//             );
+//             console.log(error);
+//         }
+//     }
+// }
