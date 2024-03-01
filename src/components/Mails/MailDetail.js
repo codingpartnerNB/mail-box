@@ -14,7 +14,6 @@ const MailDetail = (props) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   // console.log(msgId);
   const navigate = useNavigate();
-  console.log("MailDetail");
 
   useEffect(() => {
     if (isLoggedIn) {

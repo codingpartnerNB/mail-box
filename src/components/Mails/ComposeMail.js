@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addMailHandler } from "../../store/mailAllActions";
 import storageDb from "../../store/Config";
@@ -8,13 +8,12 @@ import attachFile from '../../assets/attach-file.png';
 import remove from '../../assets/remove.png';
 
 const ComposeMail = () => {
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [enteredSubject, setEnteredSubject] = useState("");
-  const [body, setBody] = useState("");
+  const userEmail = useRef();
+  const userSubject = useRef();
+  const userBody = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const email = useSelector(state => state.auth.email);
-  console.log("ComposeMail");
 
   //Attachment variables
   const [attachment, setAttachment] = useState(null);
@@ -38,6 +37,9 @@ const ComposeMail = () => {
   
   const submitMailHandler = async(event) => {
     event.preventDefault();
+    const enteredEmail = userEmail.current.value;
+    const enteredSubject = userSubject.current.value;
+    const body = userBody.current.value;
     let attachmentData = null;
     if (attachment) {
       const storageRef = ref(storageDb,`attachments/${v4()}`);
@@ -62,9 +64,9 @@ const ComposeMail = () => {
     // console.log(mail);
     setIsLoading(true);
     dispatch(addMailHandler(mail, email.replace(/[@.]/g, ''), enteredEmail.replace(/[@.]/g, "")));
-    setBody("");
-    setEnteredEmail("");
-    setEnteredSubject("");
+    userEmail.current.value = '';
+    userSubject.current.value = '';
+    userBody.current.value = '';
     setAttachment(null);
     setIsLoading(false);
   }
@@ -107,8 +109,7 @@ const ComposeMail = () => {
           <input
             type="email"
             id="to"
-            value={enteredEmail}
-            onChange={(event)=>setEnteredEmail(event.target.value)}
+            ref={userEmail}
             className="w-full border-2 border-gray-400 rounded-lg pl-2 p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800"
             required
           />
@@ -116,8 +117,7 @@ const ComposeMail = () => {
         <hr />
         <input
           type="text"
-          value={enteredSubject}
-          onChange={(event)=>setEnteredSubject(event.target.value)}
+          ref={userSubject}
           placeholder="Subject"
           className="w-full border-2 border-gray-400 rounded-lg pl-2 p-1 my-2 focus:outline-none focus:border-2 focus:border-amber-800"
           required
@@ -150,8 +150,7 @@ const ComposeMail = () => {
           </div>
         )}
         <textarea
-          onChange={(event) => setBody(event.target.value)}
-          value={body}
+          ref={userBody}
           className="w-full h-[40vh] my-4 p-2 border-2 border-gray-400 rounded-lg focus:outline-none focus:border-2 focus:border-amber-800"
           required
         />

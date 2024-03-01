@@ -10,7 +10,6 @@ const Pages = (props) => {
   const isLoggedIn = props.isLoggedIn;
   const receivedMails = useSelector((state) => state.mail.receivedMailMsg);
   const sentMails = useSelector(state=>state.mail.sentMailMsg);
-  console.log("Pages");
 
   const ComposeMail = lazy(() => import("../Mails/ComposeMail"));
   const MailLists = lazy(() => import("../Mails/MailLists"));

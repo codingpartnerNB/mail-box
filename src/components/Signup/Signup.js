@@ -73,6 +73,8 @@ const Signup = () => {
         navigate('/home');
       }else{
         console.log("User has successfully signed up!");
+        emailInputRef.current.value = '';
+        passwordInputRef.current.value = '';
         setIsLogin(true);
       }
       // console.log(data);

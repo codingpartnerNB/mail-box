@@ -15,7 +15,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const unreadMsg = useSelector(state=>state.mail.unreadMails);
   const totalMsg = useSelector(state=>state.mail.totalMails);
-  console.log("Header");
 
   const sidebarItems = [
     { src: login, label: "Login", show: !isLoggedIn, to: "/", msgCount: '' },

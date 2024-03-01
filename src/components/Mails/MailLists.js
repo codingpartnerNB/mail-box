@@ -16,7 +16,6 @@ const MailLists = (props) => {
   const navigate = useNavigate();
   const MAX_CHARACTERS = 30;
   const SUBJECT_MAX_CHAR = 10;
-  console.log("MailLists");
 
   useEffect(() => {
     const fetchMail = ()=>{
