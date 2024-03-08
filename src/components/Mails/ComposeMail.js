@@ -62,13 +62,12 @@ const ComposeMail = () => {
       atTime: formattedTime,
     };
     // console.log(mail);
-    setIsLoading(true);
+    btnClick();
     dispatch(addMailHandler(mail, email.replace(/[@.]/g, ''), enteredEmail.replace(/[@.]/g, "")));
     userEmail.current.value = '';
     userSubject.current.value = '';
     userBody.current.value = '';
     setAttachment(null);
-    setIsLoading(false);
   }
 
   const handleAttachmentChange = (event) => {
@@ -98,6 +97,20 @@ const ComposeMail = () => {
     setPreviewSrc(null);
     setIsImage(false);
   };
+
+  const throttling = (callback, delay)=>{
+    let timer;
+    return function(){
+      if(timer) clearTimeout(timer);
+      setIsLoading(true);
+      timer = setTimeout(()=>{
+        callback();
+      }, delay);
+    }
+  }
+  const btnClick = throttling(()=>{
+    setIsLoading(false);
+  },500);
 
   return (
     <section className="border-2 border-amber-900 bg-amber-50 rounded-lg my-6 w-3/4 m-auto shadow-[0_0_40px_-10px_rgba(0,0,0,0.6)] shadow-amber-900">
@@ -159,7 +172,7 @@ const ComposeMail = () => {
           disabled={isLoading}
           className="bg-amber-700 text-white w-full p-1.5 my-2 rounded-lg text-bold hover:bg-amber-900"
         >
-          {isLoading ? 'Sending mail...' : 'Send mail'}
+          Send mail
         </button>
       </form>
     </section>
